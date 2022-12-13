@@ -11,13 +11,29 @@ pub type Hsk = u8;
 
 impl HSKLists<'_> {
     pub fn level(&self, query: &str) -> Option<Hsk> {
-        let hsks: [&[&str]; 6] = [
-            &self.hsk1, &self.hsk2, &self.hsk3, &self.hsk4, &self.hsk5, &self.hsk6,
-        ];
-        hsks.iter()
-            .enumerate()
-            .find(|(_, els)| els.contains(&query))
-            .map(|(level, _)| (level as Hsk) + 1)
+        if self.hsk1.contains(&query) {
+            Some(1)
+        } else if self.hsk2.contains(&query) {
+            Some(2)
+        } else if self.hsk3.contains(&query) {
+            Some(3)
+        } else if self.hsk4.contains(&query) {
+            Some(4)
+        } else if self.hsk5.contains(&query) {
+            Some(5)
+        } else if self.hsk6.contains(&query) {
+            Some(6)
+        } else {
+            None
+        }
+
+        // let hsks: [&[&str]; 6] = [
+        //     &self.hsk1, &self.hsk2, &self.hsk3, &self.hsk4, &self.hsk5, &self.hsk6,
+        // ];
+        // hsks.iter()
+        //     .enumerate()
+        //     .find(|(_, els)| els.contains(&query))
+        //     .map(|(level, _)| (level as Hsk) + 1)
     }
 }
 

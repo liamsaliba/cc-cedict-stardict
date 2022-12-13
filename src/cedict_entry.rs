@@ -1,7 +1,6 @@
 use std::{fmt::Display, str::FromStr};
 
 use anyhow::{Context, Error};
-use itertools::Itertools;
 
 use crate::hsk;
 
@@ -13,7 +12,6 @@ pub struct CedictEntry {
 }
 
 impl CedictEntry {
-    #[allow(dead_code)]
     pub fn hsk(&self) -> Option<hsk::Hsk> {
         hsk::HSK.level(&self.simplified)
     }
@@ -56,15 +54,18 @@ impl Display for CedictEntry {
         let entries: String = self
             .entries
             .iter()
-            .map(|e| "• ".to_owned() + e)
-            .intersperse("\n".to_owned())
+            .map(|e| "• ".to_owned() + e + "\n")
             .collect();
+
+        let hsk = self
+            .hsk()
+            .map_or_else(|| "".to_string(), |hsk| format!(" HSK {}", hsk));
 
         write!(
             f,
             // "{}\t{} 【{}{}】 {}",
-            "{}\t{} 【{}{}】\n{}",
-            &self.simplified, &self.pinyin, &self.simplified, traditional, entries,
+            "{}\t{} 【{}{}】{}\n{}",
+            &self.simplified, &self.pinyin, &self.simplified, traditional, hsk, entries,
         )
     }
 }

@@ -36,7 +36,7 @@ fn main() -> Result<()> {
     let f = std::fs::File::create(&args.out_path)?;
     let mut writer = std::io::BufWriter::new(f);
     for entry in entries {
-        writeln!(writer, "{}\n", entry)?;
+        writeln!(writer, "{}", entry)?;
     }
 
     Ok(())
