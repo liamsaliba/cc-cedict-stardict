@@ -16,7 +16,7 @@ struct Args {
     #[arg(short, long, default_value = "data/cedict_ts.u8")]
     in_path: std::path::PathBuf,
 
-    #[arg(short, long, default_value = "cedict.tsv")]
+    #[arg(short, long, default_value = "cedict.csv")]
     out_path: std::path::PathBuf,
 }
 
@@ -36,7 +36,7 @@ fn main() -> Result<()> {
     let f = std::fs::File::create(&args.out_path)?;
     let mut writer = std::io::BufWriter::new(f);
     for entry in entries {
-        writeln!(writer, "{}", entry)?;
+        writeln!(writer, "{}\n", entry)?;
     }
 
     Ok(())

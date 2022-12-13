@@ -1,6 +1,7 @@
 use std::{fmt::Display, str::FromStr};
 
 use anyhow::{Context, Error};
+use itertools::Itertools;
 
 use crate::hsk;
 
@@ -27,10 +28,10 @@ impl FromStr for CedictEntry {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let (simplified, rest) = s
+        let (traditional, rest) = s
             .split_once(' ')
-            .context("should split into simplified and rest")?;
-        let (traditional, rest) = rest.split_once(" [").context("should split traditional")?;
+            .context("should split into traditional and rest")?;
+        let (simplified, rest) = rest.split_once(" [").context("should split simplified")?;
         let (pinyin, rest) = rest.split_once("] /").context("should split pinyin")?;
         let mut entries: Vec<String> = rest.split('/').map(|s| s.to_string()).collect();
         entries.pop();
@@ -52,14 +53,23 @@ impl Display for CedictEntry {
             format!(" {}", &self.traditional)
         };
 
+        let entries: String = self
+            .entries
+            .iter()
+            .map(|e| "• ".to_owned() + e)
+            .intersperse("\n".to_owned())
+            .collect();
+
         write!(
             f,
-            "{}\t{} 【{}{}】 {}",
-            &self.simplified,
-            &self.pinyin,
-            &self.simplified,
-            traditional,
-            &self.entries.join("; ")
+            // "{}\t{} 【{}{}】 {}",
+            "{}\t{} 【{}{}】\n{}",
+            &self.simplified, &self.pinyin, &self.simplified, traditional, entries,
         )
     }
 }
+
+// penelope -i cedict.csv -j csv --csv-fs "\t" --csv-ls "\n\n" -f cn -t en -p stardict -o cedict.zip --merge-definitions --merge-separator "\n" -d --title "CC-CEDICT 汉英词典"
+// unzip cedict.zip
+// sdcv --utf8-input --utf8-output --data-dir . -c -e 我
+// sdcv --utf8-input --utf8-output --data-dir . -c -e -n --json 跑步
