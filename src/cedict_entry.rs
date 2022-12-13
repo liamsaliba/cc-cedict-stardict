@@ -21,6 +21,19 @@ impl CedictEntry {
     pub fn is_surname(&self) -> bool {
         self.entries.iter().any(|e| e.contains("surname "))
     }
+
+    /// Is the simplified chinese different to the traditional chinese for this [`CedictEntry`]?
+    pub fn has_simplified(&self) -> bool {
+        self.simplified != self.traditional
+    }
+
+    pub fn to_simplified_csv_line(&self) -> String {
+        format!("{}\t{}", self.simplified, self)
+    }
+
+    pub fn to_traditional_csv_line(&self) -> String {
+        format!("{}\t{}", self.traditional, self)
+    }
 }
 
 impl FromStr for CedictEntry {
@@ -48,10 +61,10 @@ impl FromStr for CedictEntry {
 
 impl Display for CedictEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let traditional = if self.traditional == self.simplified {
-            "".into()
-        } else {
+        let traditional = if self.has_simplified() {
             format!(" {}", &self.traditional)
+        } else {
+            "".into()
         };
 
         let entries: String = self
@@ -66,9 +79,8 @@ impl Display for CedictEntry {
 
         write!(
             f,
-            // "{}\t{} 【{}{}】 {}",
-            "{}\t{} 【{}{}】{}\n{}",
-            &self.simplified, &self.pinyin, &self.simplified, traditional, hsk, entries,
+            "{} 【{}{}】{}\n{}",
+            &self.pinyin, &self.simplified, traditional, hsk, entries,
         )
     }
 }
