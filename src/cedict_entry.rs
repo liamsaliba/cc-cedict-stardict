@@ -12,6 +12,7 @@ pub struct CedictEntry {
 }
 
 impl CedictEntry {
+    /// Returns the (lowest) hsk level of this [`CedictEntry`].
     pub fn hsk(&self) -> Option<hsk::Hsk> {
         hsk::HSK.level(&self.simplified)
     }
@@ -34,10 +35,12 @@ impl FromStr for CedictEntry {
         let mut entries: Vec<String> = rest.split('/').map(|s| s.to_string()).collect();
         entries.pop();
 
+        let pinyin = prettify_pinyin::prettify(pinyin.to_string());
+
         Ok(Self {
             simplified: simplified.to_string(),
             traditional: traditional.to_string(),
-            pinyin: pinyin.to_string(),
+            pinyin,
             entries,
         })
     }
