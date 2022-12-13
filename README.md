@@ -1,8 +1,6 @@
-# cedict
+# cc-cedict-stardict
 
-Takes [CC-CEDICT Chinese-English dictionary](https://www.mdbg.net/chinese/dictionary?page=cc-cedict), converts it to StarDict format.
-
-Specifically for use with Koreader.
+Takes [CC-CEDICT Chinese-English dictionary](https://www.mdbg.net/chinese/dictionary?page=cc-cedict), converts it to [StarDict format](http://www.huzheng.org/stardict/StarDictFileFormat), specifically for use with [Koreader](https://github.com/koreader/koreader) / [sdcv](https://github.com/Dushistov/sdcv).  Aimed to fix [koreader#9907](https://github.com/koreader/koreader/issues/9907).
 
 First time using Rust!
 
